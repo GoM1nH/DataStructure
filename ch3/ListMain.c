@@ -8,11 +8,10 @@ int main() {
     int data;
     ListInit(&list);
 
-    LInsert(&list, 11);
-    LInsert(&list, 11);
-    LInsert(&list, 22);
-    LInsert(&list, 22);
-    LInsert(&list, 33); // data save (5개)
+    int i;
+    for (i=1 ; i<=9 ; i++) {
+        LInsert(&list, i);
+    }
 
     printf("Current Data Count : %d \n", LCount(&list)); //data 출력, ArrayList.h에 저장한 LCount 함수 응용
 
@@ -25,10 +24,10 @@ int main() {
     printf("\n\n");
 
     if(LFirst(&list, &data)) {
-        if (data == 22) LRemove(&list); // 리스트의 첫 번째 데이터가 22일시, 삭제
+        if (data%2 == 0 || data%3 == 0) LRemove(&list); // 리스트의 첫 번째 데이터가 22일시, 삭제
 
         while(LNext(&list, &data)) { //두 번째 이후 데이터가 22일 때 삭제
-            if (data == 22) LRemove(&list);
+            if (data%2 == 0 || data%3 == 0) LRemove(&list);
         }
     } // List에 있는 데이터 '22' 전부 삭제
 
