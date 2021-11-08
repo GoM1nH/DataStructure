@@ -13,7 +13,7 @@ int main() {
         LInsert(&list, i);
     }
 
-    printf("Current Data Count : %d \n", LCount(&list)); //data 출력, ArrayList.h에 저장한 LCount 함수 응용
+    printf("Current Data Count is : %d \n", LCount(&list)); //data 출력, ArrayList.h에 저장한 LCount 함수 응용
 
     if (LFirst(&list, &data)) { //첫 번째 데이터 조회
         printf("%d ", data);
