@@ -41,5 +41,5 @@ int main() {
             if(LNext(&list, &data)) printf("%d ", data);
         }
     }
-    printf("\n");
+    printf("\n"); 
 }

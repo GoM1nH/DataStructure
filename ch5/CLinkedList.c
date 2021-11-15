@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "CLinkedList.h"
+#include "CLinkedList.h" 
 
 void ListInit(List *plist) { // List 초기화
     plist->tail = NULL;

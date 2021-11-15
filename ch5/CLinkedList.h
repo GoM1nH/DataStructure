@@ -11,7 +11,7 @@ typedef struct __node {
     struct __node *next;
 } Node;
 
-typedef struct __CLL {
+typedef struct __CLL { 
     Node *tail;
     Node *cur;
     Node *before;
