@@ -58,16 +58,29 @@ void PreorderTraverse(BTreeNode *bt, VisitFuncPtr action) {
     }
 
     action(bt->data);
-    InorderTraverse(bt->left, action);
-    InorderTraverse(bt->right, action);
+    PreorderTraverse(bt->left, action);
+    PreorderTraverse(bt->right, action);
 }
 void PostorderTraverse(BTreeNode *bt, VisitFuncPtr action) {
     if (bt == NULL) {
         return;
     }
 
-    InorderTraverse(bt->left, action);
-    InorderTraverse(bt->right, action);
+    PostorderTraverse(bt->left, action);
+    PostorderTraverse(bt->right, action);
     action(bt->data);
+}
+
+void DeleteTree(BTreeNode *bt) { // Postorder로 사용. root node가 마지막에 소멸되어야 하기 때문이다.
+
+    if (bt == NULL) {
+        return;
+    }
+
+    DeleteTree(bt->left);
+    DeleteTree(bt->right);
+
+    free(bt);
+
 }
 
