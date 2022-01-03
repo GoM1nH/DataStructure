@@ -6,7 +6,13 @@
 #include "ALGraphDFS.h"
 #include "DLinkedList.h"
 
-int WhoIsPrecede(int data1, int data2);
+int WhoIsPrecede(int data1, int data2) {
+    if (data1 > data2) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
 
 void GraphInit(ALGraph *pg, int nv) {
     
