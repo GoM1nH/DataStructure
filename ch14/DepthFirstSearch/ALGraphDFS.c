@@ -38,7 +38,7 @@ void GraphDestroy(ALGraph *pg) {
         free(pg->visitInfo); // New. visitInfo 관련 리소스 해제 진행
     }
 }
-void AddEdge(ALGraph *ph, int fromV, int toV) {
+void AddEdge(ALGraph *pg, int fromV, int toV) {
     
     // fromV의 연결 리스트에 toV의 정보를 추가.
     // 만약 fromV가 B, toV가 D라면, adjList[B]에 D가 연결되어있다는걸 알리기 위해 D를 LInsert 해주는 것이다.
