@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "CircularQueue.h"
-#include "ALGraphDFS.h"
+#include "ALGraphKruskal.h"
 #include "DLinkedList.h"
+#include "ArrayBaseStack.h"
 
 int WhoIsPrecede(int data1, int data2) {
     if (data1 > data2) {
@@ -12,6 +12,11 @@ int WhoIsPrecede(int data1, int data2) {
     } else {
         return 1;
     }
+}
+
+int PQWeightComp(Edge d1, Edge d2)
+{
+	return d1.weight - d2.weight;
 }
 
 void GraphInit(ALGraph *pg, int nv) {
@@ -154,4 +159,89 @@ void ShowGraphEdgeWeightInfo(ALGraph *pg) { // 간선의 가중치 정보 출력
         edge = PDqueue(&copyPQ);
         printf("(%c-%c), w:%d \n", edge.v1+65, edge.v2+65, edge.weight);
     }
+}
+
+void RemoveEdge(ALGraph *pg, int fromV, int toV) {
+    RemoveWayEdge(pg, fromV, toV); // fromV -> toV 삭제
+    RemoveWayEdge(pg ,fromV, toV); // toV -> fromV 삭제
+    (pg->numE)--;
+}
+
+void RemoveWayEdge(ALGraph *pg, int fromV, int toV) {
+    int edge;
+
+    if (LFirst(&(pg->adjList[fromV]), &edge)) {
+        if (edge == toV) { // fromV에서 toV를 가리키는 edge를 찾았다면
+            LRemove(&(pg->adjList[fromV])); // 캇!
+            return;
+        }
+
+        while (LNext(&(pg->adjList[fromV], &edge))) {
+            if (edge == toV) {
+                LRemove(&(pg->adjList[fromV]));
+                return;
+            }
+        }
+    }
+}
+
+void RecoverEdge(ALGraph *pg, int fromV, int toV, int weight) {
+    LInsert(&(pg->adjList[fromV]), toV);
+    LInsert(&(pg->adjLost[toV]), fromV);
+    (pg->numE)++;
+}
+
+int IsConnVertex(ALGraph *pg, int v1, int v2) { // 두 정점 연결시 TRUE, 아니면 FALSE 반환 / DFS 기반
+    Stack stack;
+    int visitV = v1;
+    int nextV;
+
+    StackInit(&stack); 
+    VisitVertex(pg, visitV); // 시작 정점 방문
+    SPush(&stack, visitV); // 시작 정점을 시작으로 그래프 돌아다니기
+
+    while (LFirst(&(pg->adjList[visitV]), &nextV) == TRUE) {
+        int visitFlag = FALSE;
+        // 만약 정점을 돌아다니다가 목표를 찾으면 TRUE를 반환
+        
+        if(nextV == v2) { // 함수가 반환하기 전에 초기화를 진행.
+            memset(pg->visitInfo, 0, sizeof(int)*pg->numV);
+            return TRUE;
+        }
+
+        if (VisitVertex(pg, nextV) == TRUE) { // 다음 정점 방문에 성공하면
+            SPush(&stack, visitV); // 방문한 visitV를 스택에 넣는다. (방문 기록)
+            visitV = nextV;
+            visitFlag = TRUE;
+        } else { // LFirst 시행에서 정점 방문에 실패시 아래 실행
+
+            while(LNext(&(pg->adjList[visitV]), &nextV) == TRUE) {
+                // 정점을 돌아다니다 목표를 찾으면 TRUE 반환
+
+                if(nextV == v2) {
+                    memset(pg->visitInfo, 0, sizeof(int)*pg->numV);
+                    return TRUE;
+                }
+
+                if (VisitVertex(pg, nextV) == TRUE) {
+                    SPush(&stack, visitV);
+                    visitV = nextV;
+                    visitFlag = TRUE;
+                    break;
+                }
+            }
+        }
+
+        if(visitFlag == FALSE) {
+            if(SIsEmpty(&stack) == TRUE) {
+                break;
+            } else {
+                visitV = SPop(&stack);
+            }
+        }
+    }
+
+    memset(pg->visitInfo, 0, sizeof(int) * pg->numV);
+    return FALSE;
+
 }
